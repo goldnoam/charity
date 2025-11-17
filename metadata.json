@@ -1,0 +1,5 @@
+{
+  "name": "Charity Dash",
+  "description": "A fast-paced game where you give charity to people on the street. Each 30-second stage challenges you to give away a 50 NIS budget by pressing number keys. See how high you can get your charity score!",
+  "requestFramePermissions": []
+}
