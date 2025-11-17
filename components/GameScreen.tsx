@@ -31,7 +31,7 @@ const BudgetBar: React.FC<{ current: number; max: number }> = ({ current, max })
     return (
         <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-4 shadow-inner overflow-hidden">
             <div
-                className={`h-4 rounded-full transition-all duration-300 ease-linear ${barColor}`}
+                className={`h-4 rounded-full ${barColor}`}
                 style={{ width: `${percentage}%` }}
                 role="progressbar"
                 aria-valuenow={current}
@@ -48,7 +48,7 @@ const GameScreen: React.FC<GameScreenProps> = ({ stage, totalScore, initialBudge
   const [budget, setBudget] = useState(initialBudget);
   const [personId, setPersonId] = useState(1);
   const [feedback, setFeedback] = useState<'success' | 'error' | null>(null);
-
+  
   useEffect(() => {
     setBudget(initialBudget);
     setTime(duration);
@@ -76,14 +76,14 @@ const GameScreen: React.FC<GameScreenProps> = ({ stage, totalScore, initialBudge
     setTimeout(() => setFeedback(null), 400);
   }, [budget]);
 
+  // Handle keyboard input for giving charity
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
-      const keyNum = parseInt(event.key, 10);
-      if (!isNaN(keyNum) && keyNum >= 0 && keyNum <= 9) {
-        handleDonation(keyNum);
+      const num = parseInt(event.key, 10);
+      if (!isNaN(num) && num >= 0 && num <= 9) {
+        handleDonation(num);
       }
     };
-
     window.addEventListener('keydown', handleKeyPress);
     return () => {
       window.removeEventListener('keydown', handleKeyPress);
@@ -117,7 +117,7 @@ const GameScreen: React.FC<GameScreenProps> = ({ stage, totalScore, initialBudge
         </div>
 
         <div className="text-center">
-          <p className="text-lg text-slate-600 dark:text-slate-300 mb-4">Press a number key (0-9) to give charity!</p>
+          <p className="text-lg text-slate-600 dark:text-slate-300 mb-4">Give charity by pressing number keys (0-9) or click the button!</p>
           <div className={`relative w-64 h-80 mx-auto bg-slate-200 dark:bg-slate-600 rounded-2xl shadow-xl overflow-hidden border-4 transition-all duration-200 ${feedbackBorderStyle} ${feedbackAnimationClass}`}>
               <img 
                   key={personId}
@@ -142,6 +142,14 @@ const GameScreen: React.FC<GameScreenProps> = ({ stage, totalScore, initialBudge
                 `}</style>
           </div>
           {feedback === 'error' && <p className="text-red-500 font-bold mt-2 animate-bounce">Not enough money!</p>}
+          <div className="mt-6">
+            <button
+              onClick={() => handleDonation(1)}
+              className="px-8 py-4 bg-green-500 text-white text-2xl font-bold rounded-full shadow-lg hover:bg-green-600 transform hover:scale-105 transition-all duration-300 ease-in-out focus:outline-none focus:ring-4 focus:ring-green-300"
+            >
+              Give 1 NIS
+            </button>
+          </div>
         </div>
       </div>
     </div>
