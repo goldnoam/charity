@@ -31,7 +31,7 @@ const BudgetBar: React.FC<{ current: number; max: number }> = ({ current, max })
     return (
         <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-4 shadow-inner overflow-hidden">
             <div
-                className={`h-4 rounded-full ${barColor}`}
+                className={`h-4 rounded-full ${barColor} transition-all duration-300 ease-in-out`}
                 style={{ width: `${percentage}%` }}
                 role="progressbar"
                 aria-valuenow={current}
@@ -92,6 +92,11 @@ const GameScreen: React.FC<GameScreenProps> = ({ stage, totalScore, initialBudge
 
   const feedbackBorderStyle = feedback === 'success' ? 'border-green-500' : feedback === 'error' ? 'border-red-500' : 'border-transparent dark:border-slate-700';
   const feedbackAnimationClass = feedback === 'success' ? 'animate-success-pulse' : feedback === 'error' ? 'animate-error-shake' : '';
+  
+  const donationAmounts = [1, 5, 10, 25];
+  const buttonColors = ['bg-green-500', 'bg-blue-500', 'bg-yellow-500', 'bg-purple-500'];
+  const buttonHoverColors = ['hover:bg-green-600', 'hover:bg-blue-600', 'hover:bg-yellow-600', 'hover:bg-purple-600'];
+  const buttonRingColors = ['focus:ring-green-300', 'focus:ring-blue-300', 'focus:ring-yellow-300', 'focus:ring-purple-300'];
 
   return (
     <div className="w-full min-h-screen flex flex-col items-center justify-center p-4 bg-gray-100 dark:bg-slate-800">
@@ -117,7 +122,7 @@ const GameScreen: React.FC<GameScreenProps> = ({ stage, totalScore, initialBudge
         </div>
 
         <div className="text-center">
-          <p className="text-lg text-slate-600 dark:text-slate-300 mb-4">Give charity by pressing number keys (0-9) or click the button!</p>
+          <p className="text-lg text-slate-600 dark:text-slate-300 mb-4">Give charity by pressing a number key (0-9) or clicking a button below.</p>
           <div className={`relative w-64 h-80 mx-auto bg-slate-200 dark:bg-slate-600 rounded-2xl shadow-xl overflow-hidden border-4 transition-all duration-200 ${feedbackBorderStyle} ${feedbackAnimationClass}`}>
               <img 
                   key={personId}
@@ -142,13 +147,17 @@ const GameScreen: React.FC<GameScreenProps> = ({ stage, totalScore, initialBudge
                 `}</style>
           </div>
           {feedback === 'error' && <p className="text-red-500 font-bold mt-2 animate-bounce">Not enough money!</p>}
-          <div className="mt-6">
-            <button
-              onClick={() => handleDonation(1)}
-              className="px-8 py-4 bg-green-500 text-white text-2xl font-bold rounded-full shadow-lg hover:bg-green-600 transform hover:scale-105 transition-all duration-300 ease-in-out focus:outline-none focus:ring-4 focus:ring-green-300"
-            >
-              Give 1 NIS
-            </button>
+          <div className="mt-6 flex justify-center flex-wrap gap-2 sm:gap-4">
+             {donationAmounts.map((amount, index) => (
+                <button
+                key={amount}
+                onClick={() => handleDonation(amount)}
+                disabled={budget < amount}
+                className={`px-5 py-3 ${buttonColors[index]} text-white text-xl font-bold rounded-full shadow-lg ${buttonHoverColors[index]} transform hover:scale-105 transition-all duration-300 ease-in-out focus:outline-none focus:ring-4 ${buttonRingColors[index]} disabled:bg-slate-400 dark:disabled:bg-slate-600 disabled:scale-100 disabled:cursor-not-allowed`}
+                >
+                {amount} NIS
+                </button>
+            ))}
           </div>
         </div>
       </div>
